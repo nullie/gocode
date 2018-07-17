@@ -140,9 +140,12 @@ symbol is preceded by a \".\", ignoring `company-minimum-prefix-length'."
 (defun company-go--prefix ()
   "Returns the symbol to complete. Also, if point is on a dot,
 triggers a completion immediately."
-  (if company-go-begin-after-member-access
-      (company-grab-symbol-cons "\\." 1)
-    (company-grab-symbol)))
+  (let ((symbol (if company-go-begin-after-member-access
+                    (company-grab-symbol-cons "\\." 1)
+                  (company-grab-symbol))))
+    (if (equal symbol "return")
+        nil
+      symbol)))
 
 (defun company-go--godef-jump (point)
   (condition-case nil
